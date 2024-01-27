@@ -1,0 +1,3 @@
+[submodule "study1/security_submodules"]
+	path = study1/security_submodules
+	url = https://github.com/ddanddanChoonsik/security_submodules.git
