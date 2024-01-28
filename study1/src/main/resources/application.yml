@@ -1,0 +1,22 @@
+## private repository에서 관리하기
+# was local server 
+server:
+  port: 9001
+spring:
+  devtools:
+    livereload:
+      enabled: true
+
+# mysql 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/studydb?serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+    
+ #mybatis
+mybatis:
+  type-aliases-package: data.mapper,data.vo
+  mapper-locations:
+  - /mapper/**/*.xml
+    
