@@ -23,13 +23,15 @@ public class ShopService implements ShopServiceInter {
 	
 	
 	@Override
-	public List<ShopVo> getDatas(ShopVo vo) {
+	public List<ShopVo> getDatas(ShopVo vo){
 		// TODO Auto-generated method stub
 		 if (vo.getFilter() != null && !vo.getFilter().isEmpty()) {
 		        vo.setFilterItems(vo.getFilter().split(","));
+		    }else if (vo.getSearch()!= null && vo.getSearch().isEmpty()) {
+		    	vo.setSearch(vo.getSearch());
 		    }
-		 
-		 System.out.println(shopMapper.getDatas(vo));
-		    return shopMapper.getDatas(vo);
+		 	List<ShopVo> list = shopMapper.getDatas(vo);
+		 	System.out.println(list);
+		    return list;
 }
 }

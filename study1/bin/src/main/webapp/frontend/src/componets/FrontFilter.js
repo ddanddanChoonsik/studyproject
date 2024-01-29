@@ -1,62 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const BackFilter = () => {
 
-    let springUrl = process.env.REACT_APP_SPRING_URL;
+
+const FrontFilter = () => {
+
+     let springUrl = process.env.REACT_APP_SPRING_URL;
     const [datas,setDatas]=useState();
     const [chkItems,setChkItems]=useState([]);
-    const [filteringTime, setFilteringTime] = useState(0);
-    const [searchVal, setSearchVal] = useState('');
-    
+
     const getDatas=()=>{
-    axios.get(springUrl+"/shop/data").then(res=>{
-        console.log("res",res);
+    axios.get(springUrl+"/shop/getDatas").then(res=>{
         setDatas(res.data);
     }).catch((err)=>{
         console.log("error:",err);
     });
     }
-    
-    const handleInputChange = (e) => {
-      setSearchVal(e.target.value);
-    };
 
     const makeFilter = (checked, item) => {
         if (checked) {
           const updatedChkItems = [...chkItems, item];
-          setChkItems(updatedChkItems);   
+          setChkItems(updatedChkItems);
+          console.log("checked:", updatedChkItems);
         } else {
           const updatedChkItems = chkItems.filter((el) => el !== item);
-          setChkItems(updatedChkItems);   
+          setChkItems(updatedChkItems);
+          console.log("unchecked:", updatedChkItems);
         }
     };
-
-    const searchFilter = () => {
-      const start = window.performance.now();
-        axios.get(springUrl + "/shop/filter", {
-            params: { filter: chkItems.join(","), search: searchVal } 
-        }).then(res => {
-        
-      const end = window.performance.now();
-      const time = end - start;
-      // 상태 업데이트
-      setFilteringTime(time);
-      setDatas(res.data);
-
-        }).catch((err) => {
-            console.log("error:", err);
-        });
-
-    };
       
+    const searchFilter = ()=> {
+
+    }
+
       useEffect(() => {
+        // getDatas는 다른 곳에서 정의한 함수로 가정합니다.
         getDatas();
       }, []);
       
       return (
-        <div style={{ border: '1px solid blue', width: '30%', height: '100%' }}>
-          <p>Backend로 처리할 필터링</p>
+        <div style={{ border: '1px solid red', width: '30%', height: '100%' }}>
+          <p>FrontEnd로만 처리할 필터링</p>
          
           <div style={{ height: '10%' }}>
           <input
@@ -83,22 +67,19 @@ const BackFilter = () => {
                     onChange={(e) => makeFilter(e.target.checked, "F")}
                   />
                   <label htmlFor="S">신발</label>
-                  <br/>
-        <input type="text" id="search" value={searchVal} onChange={handleInputChange} placeholder="검색창"/>
         </div>
         <button style={{margin:'10px',width:'150px'}} onClick={searchFilter}>필터링</button>
 
         <div className="data" style={{border:"1px solid black"}}>
-        <p>필터링 시간 : {filteringTime} ms</p>
         {datas&&datas.map((data,idx)=>(
         <ul key={data.filtercode}>
-            <li>상품명 : {data.name}<br/> 품목 : {data.filtername} <br/>가격 : {data.price}</li>
+            <li  data-cat={data.filtercat}>상품명 : {data.name}<br/> 품목 : {data.filtername} <br/>가격 : {data.price}</li>
         </ul>
         ))
         }
         </div>
-        </div>
+        </div>  
     );
 };
 
-export default BackFilter;
+export default FrontFilter;

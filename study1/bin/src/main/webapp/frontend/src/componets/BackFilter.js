@@ -6,51 +6,43 @@ const BackFilter = () => {
     let springUrl = process.env.REACT_APP_SPRING_URL;
     const [datas,setDatas]=useState();
     const [chkItems,setChkItems]=useState([]);
-    const [filteringTime, setFilteringTime] = useState(0);
-    const [searchVal, setSearchVal] = useState('');
-    
+
     const getDatas=()=>{
-    axios.get(springUrl+"/shop/data").then(res=>{
-        console.log("res",res);
+    axios.get(springUrl+"/shop/getDatas").then(res=>{
         setDatas(res.data);
     }).catch((err)=>{
         console.log("error:",err);
     });
     }
     
-    const handleInputChange = (e) => {
-      setSearchVal(e.target.value);
-    };
 
     const makeFilter = (checked, item) => {
         if (checked) {
           const updatedChkItems = [...chkItems, item];
-          setChkItems(updatedChkItems);   
+          setChkItems(updatedChkItems);
+          console.log("checked:", updatedChkItems);
         } else {
           const updatedChkItems = chkItems.filter((el) => el !== item);
-          setChkItems(updatedChkItems);   
+          setChkItems(updatedChkItems);
+          console.log("unchecked:", updatedChkItems);
         }
     };
 
     const searchFilter = () => {
-      const start = window.performance.now();
-        axios.get(springUrl + "/shop/filter", {
-            params: { filter: chkItems.join(","), search: searchVal } 
+        axios.get(springUrl + "/shop/filterDatas", {
+            params: { filter: chkItems.join(",") }  // 여러 항목을 콤마로 연결하여 문자열로 변환
         }).then(res => {
-        
-      const end = window.performance.now();
-      const time = end - start;
-      // 상태 업데이트
-      setFilteringTime(time);
-      setDatas(res.data);
-
+            
+            console.log("filterData", res);
+            setDatas(res.data);
         }).catch((err) => {
             console.log("error:", err);
         });
-
+        console.log(chkItems);
     };
       
       useEffect(() => {
+        // getDatas는 다른 곳에서 정의한 함수로 가정합니다.
         getDatas();
       }, []);
       
@@ -83,15 +75,12 @@ const BackFilter = () => {
                     onChange={(e) => makeFilter(e.target.checked, "F")}
                   />
                   <label htmlFor="S">신발</label>
-                  <br/>
-        <input type="text" id="search" value={searchVal} onChange={handleInputChange} placeholder="검색창"/>
         </div>
         <button style={{margin:'10px',width:'150px'}} onClick={searchFilter}>필터링</button>
 
         <div className="data" style={{border:"1px solid black"}}>
-        <p>필터링 시간 : {filteringTime} ms</p>
         {datas&&datas.map((data,idx)=>(
-        <ul key={data.filtercode}>
+        <ul key={data.filtercode + idx}>
             <li>상품명 : {data.name}<br/> 품목 : {data.filtername} <br/>가격 : {data.price}</li>
         </ul>
         ))

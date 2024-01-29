@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="data.mapper.ShopMapper">
-	
+
 	<select id="getDatas" resultType="shop">
-		select * from shop
-		<if test='filter != null and filter != ""'>
-		 where filtercat IN
-		<foreach item="item" index="index" collection="filterItems" open="(" separator="," close=")">
-		#{item}
-		</foreach>
-	</if>
+		SELECT * FROM shop
+			<if test='search != null and search != ""'>
+				 where (name LIKE CONCAT('%', #{search}, '%') OR filtername LIKE CONCAT('%', #{search}, '%'))
+			</if>
+			<if test='filter != null and filter != ""'>
+				<if test='search != null and search != ""'>
+					AND filtercat IN
+					<foreach item="item" index="index" collection="filterItems" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test='search == null or search == ""'>
+					WHERE filtercat IN
+					<foreach item="item" index="index" collection="filterItems" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</if>
 	</select>
 
 </mapper>

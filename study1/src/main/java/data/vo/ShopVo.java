@@ -14,7 +14,7 @@ public class ShopVo {
 	
 	private int num;
 	private String name;
-	private String filtercode;
+	//private String filtercode;
 	private String filtername;
 	private int price;
 	private String color;
@@ -22,6 +22,7 @@ public class ShopVo {
 	private Timestamp created_at;
 	private String filtercat;
 	
+	private String search;
 	private String filter;
 	private String[] filterItems;
 

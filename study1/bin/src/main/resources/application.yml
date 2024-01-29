@@ -1,7 +1,7 @@
 ## private repository에서 관리하기
 # was local server 
 server:
-  port: 9000
+  port: 9001
 spring:
   devtools:
     livereload:
@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/studydb?serverTimezone=Asia/Seoul
     username: root
-    password: 1q2w3e4r!@4r3e2w1q
+    password: 1234
     
  #mybatis
 mybatis:
