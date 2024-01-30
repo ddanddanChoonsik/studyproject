@@ -44,4 +44,7 @@ log/
 .DS_Store
 Thumbs.db
 
+## YML ##
+/src/main/resources/application.yml
+
 
