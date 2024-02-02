@@ -1,22 +1,31 @@
 ## private repository에서 관리하기
-# was local server 
+# 서브모듈의 application.yml 참조
 server:
   port: 9000
+
 spring:
+  #profiles:
+   # active: dev
   devtools:
     livereload:
       enabled: true
-
+  #config:
+    #activate:
+      #on-profile: "@spring.profiles.active@"
+    #import: classpath:/security_submodules/application.yml
 # mysql 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/studydb?serverTimezone=Asia/Seoul
-    username: root
-    password: 1q2w3e4r!@4r3e2w1q
+   driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+   url:  jdbc:log4jdbc:mysql://localhost:3306/studydb?serverTimezone=Asia/Seoul
+   username: root
+   password: 1q2w3e4r!@4r3e2w1q
     
- #mybatis
+#mybatis
 mybatis:
   type-aliases-package: data.mapper,data.vo
   mapper-locations:
   - /mapper/**/*.xml
-    
+  
+# logging 설정
+logging:
+ config: classpath:logback-spring.xml

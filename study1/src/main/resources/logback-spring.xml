@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT"	class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>[%d{yy-MM-dd HH:mm}][%-5level][%logger{0}:%method:%line] - %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+
+	<logger name="jdbc.sqlonly" level="OFF" />
+	<logger name="jdbc.resultsettable" level="INFO"/>
+	<logger name="jdbc.sqltiming" level="INFO"/>
+	<logger name="jdbc.audit" level="OFF"/>
+	<logger name="jdbc.resultset" level="OFF"/>
+	<logger name="jdbc.connection" level="OFF"/>
+	
+	<logger name="com.in4in.drms" level="debug" additivity="false" >
+		<appender-ref ref="STDOUT"/>
+	</logger>
+	
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
+
