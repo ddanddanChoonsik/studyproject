@@ -5,22 +5,41 @@
 	<select id="getDatas" resultType="shop">
 		SELECT * FROM shop
 			<if test='search != null and search != ""'>
-				 where (name LIKE CONCAT('%', #{search}, '%') OR filtername LIKE CONCAT('%', #{search}, '%'))
+				WHERE (name LIKE CONCAT('%', #{search}, '%') OR filter_name LIKE CONCAT('%', #{search}, '%'))
 			</if>
 			<if test='filter != null and filter != ""'>
 				<if test='search != null and search != ""'>
-					AND filtercat IN
+					AND filter_cat IN
 					<foreach item="item" index="index" collection="filterItems" open="(" separator="," close=")">
 						#{item}
 					</foreach>
 				</if>
 				<if test='search == null or search == ""'>
-					WHERE filtercat IN
+					WHERE filter_cat IN
 					<foreach item="item" index="index" collection="filterItems" open="(" separator="," close=")">
 						#{item}
 					</foreach>
 				</if>
 			</if>
 	</select>
-
+	
+	 <select id="getCodes" resultType="shop">
+        SELECT * FROM shopcode
+    </select>
+    
+     <insert id="insertShop" parameterType="shop">
+       INSERT INTO shop (name, filter_code, price, color, created_at, filter_cat)
+    VALUES (#{name}, #{filter_code}, #{price}, #{color}, now(), #{filter_cat})
+    </insert>
+    
+     <update id="updateShop" parameterType="map">
+    UPDATE shop
+    SET
+    filter_cat = #{shopVo.filter_cat},
+    name = #{shopVo.name},
+    price = #{shopVo.price},
+    color = #{shopVo.color},
+    created_at=now() 
+    WHERE num = #{num}
+</update>
 </mapper>

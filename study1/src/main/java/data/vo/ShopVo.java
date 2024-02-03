@@ -14,16 +14,15 @@ public class ShopVo {
 	
 	private int num;
 	private String name;
-	//private String filtercode;
-	private String filtername;
+	private String filter_name; // Updated property name to match the column
 	private int price;
+	private String filter_code;
 	private String color;
-	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone="Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd" , timezone="Asia/Seoul")
 	private Timestamp created_at;
-	private String filtercat;
+	private String filter_cat; // Updated property name to match the column
 	
 	private String search;
 	private String filter;
 	private String[] filterItems;
-
 }
