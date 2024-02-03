@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import BackFilter from './componets/BackFilter';
 import FrontFilter from './componets/FrontFilter';
+import BasicModal from './componets/BasicModal';
 
 function App() {
   return (

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import BasicModal from './BasicModal';
+
 
 const FrontFilter = () => {
   let springUrl = process.env.REACT_APP_SPRING_URL;
@@ -11,7 +13,6 @@ const FrontFilter = () => {
   
   const getDatas = () => {
     axios.get(springUrl + "/shop/data").then(res => {
-      console.log("res",res);
        setDatas(res.data);
        setFilterData(res.data);
     }).catch((err) => {
@@ -94,10 +95,11 @@ const FrontFilter = () => {
       <button style={{ margin: '10px', width: '150px' }} onClick={searchFilter}>필터링</button>
 
       <div className="data" style={{ border: "1px solid black" }}>
-       <p>필터링 시간 : {filteringTime} ms</p>
+      <div style={{display:'flex',flexDirection:'row-reverse',padding:'5px 5px 0 0'}}><button>상품등록</button></div>
+       {/* <p>필터링 시간 : {filteringTime} ms</p> */}
         {filterData && filterData.map((data, idx) => (
           <ul key={data.filtercode}>
-            <li data-cat={data.filtercat}>상품명: {data.name}<br /> 품목: {data.filtername} <br />가격: {data.price}</li>
+            <li data-cat={data.filtercat}>상품명: {data.name}<br /> 품목: {data.filter_name} <br />가격: {data.price}</li>
           </ul>
         ))
         }
