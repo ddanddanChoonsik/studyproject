@@ -46,8 +46,8 @@ public class ShopServiceImpl implements ShopService {
 
         for (ShopVo shopVo : shopVoList) {
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            map.put("filter_cat", shopVo.getFilter_cat());
-            map.put("filter_name", shopVo.getFilter_name());
+            map.put("filterCat", shopVo.getFilterCat());
+            map.put("filterName", shopVo.getFilterName());
             result.add(map);
         }
 
@@ -60,7 +60,12 @@ public class ShopServiceImpl implements ShopService {
     }
 	
 	 @Override
-	    public void updateShop(int num, ShopVo shopVo) {
-	        shopMapper.updateShop(num, shopVo);
+	    public void updateShop(ShopVo shopVo) {
+	        shopMapper.updateShop(shopVo);
 	    }
+	 
+	 @Override
+	 public void deleteShop(int num) {
+		 shopMapper.deleteShop(num);
+	 }
 }

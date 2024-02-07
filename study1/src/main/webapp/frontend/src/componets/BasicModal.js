@@ -26,11 +26,12 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
   const [price, setPrice] = useState('');
   const [showPicker, setShowPicker] = useState(false);
   const [name, setName] = useState('');
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
-  // useEffect to set form data when selectedProduct changes
+
   useEffect(() => {
     if (selectedProduct) {
-      setSelectedOption(selectedProduct.filter_cat);
+      setSelectedOption(selectedProduct.filterCat);
       setColor(selectedProduct.color);
       setPrice(selectedProduct.price);
       setName(selectedProduct.name);
@@ -40,11 +41,12 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
   const options = Array.isArray(codeDatas) ? codeDatas : [];
 
   const handleSelectChange = (e) => {
-    const selectedIndex = e.target.selectedIndex;
-    const selectedOption = options[selectedIndex];
-    document.getElementById('productName').value = selectedOption.filter_name;
-    setSelectedOption(selectedOption.filter_cat);
+    const selectedOption = e.target.value;
+    const selectedData = options.find(data => data.filterCat === selectedOption) || options[0];
+  
+    setSelectedOption(selectedData.filterCat);
   };
+  
 
   const handleColorChange = (newColor) => {
     setColor(newColor.hex);
@@ -55,20 +57,20 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
   };
 
   const handleProductRegistration = () => {
-    const selectedData = options.find(data => data.filter_cat === selectedOption);
+    const selectedData = options.find(data => data.filterCat === selectedOption);
 
-    if (!selectedData) {
-      console.error('Selected data not found.');
-      return;
-    }
+  if (!selectedData) {
+    console.error('Selected data not found.');
+    return;
+  }
 
-    const addData = {
-      filter_cat: selectedOption,
-      filter_name: selectedData.filter_name,
-      name: name,
-      price: parseInt(price),
-      color: color,
-    };
+  const addData = {
+    filterCat: selectedOption,
+    filterName: selectedData.filterName,
+    name: name, 
+    price: parseInt(price),
+    color: color,
+  };
 
     axios.post(springUrl + '/shop/add', addData)
       .then(response => {
@@ -86,15 +88,17 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
   };
 
   const handleProductEdit = () => {
+    const selectedData = options.find(data => data.filterCat === selectedOption);
     const editedData = {
-      num: selectedProduct.num, // 상품 num 추가
-      filter_cat: selectedOption,
-      name: name,
+      num: selectedProduct.num,
+      filterCat: selectedOption,
+      filterName: selectedData.filterName,
+      name: name, 
       price: parseInt(price),
       color: color,
     };
-  
-    axios.put(`${springUrl}/shop/update/${editedData.num}`, editedData)
+
+    axios.post(`${springUrl}/shop/update?num=${editedData.num}`, editedData)
       .then(response => {
         console.log("response",response);
         alert("상품 수정 완료하였습니다.");
@@ -110,10 +114,19 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
       });
   };
 
+  const closeModal = () => {
+    const confirmed = window.confirm('정말 취소하시겠습니까?');
+    if (confirmed) {
+      alert("취소되었습니다.");
+      onClose();
+    }
+  };
+
+
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      //onClose={closeModal}
     >
       <Box sx={style}>
         <div className="modal-content">
@@ -122,8 +135,8 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
             <label>카테고리: </label>
             <select value={selectedOption} onChange={handleSelectChange}>
               {options.map((data, idx) => (
-                <option key={idx} value={data.filter_cat}>
-                  {data.filter_name}
+                <option key={idx} value={data.filterCat}>
+                  {data.filterName}
                 </option>
               ))}
             </select>
@@ -157,6 +170,7 @@ const BasicModal = ({ open, onClose, codeDatas, onProductRegistered, selectedPro
           </div>
           <br /><br />
           <button onClick={selectedProduct ? handleProductEdit : handleProductRegistration}>{selectedProduct ? '상품 수정' : '상품 등록'}</button>
+          <button onClick={closeModal}>취소</button>
         </div>
       </Box>
     </Modal>

@@ -13,6 +13,7 @@ public interface ShopMapper{
 	 List<ShopVo> getDatas(ShopVo vo);
 	 List<ShopVo> getCodes();
 	 void insertShop(ShopVo shopVo);
-	 void updateShop(@Param("num") int num, @Param("shopVo") ShopVo shopVo);
+	 void updateShop(ShopVo shopVo);
+	 void deleteShop(int num);
 	 
 }

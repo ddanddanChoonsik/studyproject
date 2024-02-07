@@ -22,6 +22,8 @@ spring:
     
 #mybatis
 mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
   type-aliases-package: data.mapper,data.vo
   mapper-locations:
   - /mapper/**/*.xml

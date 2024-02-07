@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,9 +47,12 @@ public class ShopController {
 	        shopService.addShop(shopVo);
 	    }
 	 
-	  @PostMapping("/update/{num}")
-	    public void updateShop(@PathVariable int num, @RequestBody ShopVo shopVo) {
-	        shopService.updateShop(num, shopVo);
+	  @PostMapping("/update")
+	    public void updateShop(@RequestBody ShopVo shopVo) {
+	        shopService.updateShop(shopVo);
 	    }
-	 
+	 @DeleteMapping("/delete")
+	 public void deleteShop(@RequestParam int num) {
+		 shopService.deleteShop(num);
+	 }
 }

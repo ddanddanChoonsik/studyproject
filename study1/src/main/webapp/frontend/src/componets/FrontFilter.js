@@ -99,7 +99,7 @@ const FrontFilter = () => {
        {/* <p>필터링 시간 : {filteringTime} ms</p> */}
         {filterData && filterData.map((data, idx) => (
           <ul key={data.filtercode}>
-            <li data-cat={data.filtercat}>상품명: {data.name}<br /> 품목: {data.filter_name} <br />가격: {data.price}</li>
+            <li data-cat={data.filtercat}>상품명: {data.name} || 품목: {data.filterName} <br />가격: {data.price} || 색상: {data.color}</li>
           </ul>
         ))
         }

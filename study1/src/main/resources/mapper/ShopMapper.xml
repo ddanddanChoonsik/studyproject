@@ -29,17 +29,14 @@
     
      <insert id="insertShop" parameterType="shop">
        INSERT INTO shop (name, filter_code, price, color, created_at, filter_cat)
-    VALUES (#{name}, #{filter_code}, #{price}, #{color}, now(), #{filter_cat})
+    VALUES (#{name}, #{filterCode}, #{price}, #{color}, now(), #{filterCat})
     </insert>
     
      <update id="updateShop" parameterType="map">
-    UPDATE shop
-    SET
-    filter_cat = #{shopVo.filter_cat},
-    name = #{shopVo.name},
-    price = #{shopVo.price},
-    color = #{shopVo.color},
-    created_at=now() 
-    WHERE num = #{num}
-</update>
+    	UPDATE shop SET filter_cat = #{filterCat}, filter_name=#{filterName} ,name = #{name}, price = #{price}, color = #{color}, created_at=now() WHERE num = #{num}
+	</update>
+
+	<delete id="deleteShop" parameterType="int">
+		delete from shop where num=#{num}
+</delete>
 </mapper>

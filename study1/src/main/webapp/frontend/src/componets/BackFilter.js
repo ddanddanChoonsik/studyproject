@@ -11,6 +11,7 @@ const BackFilter = () => {
   const [filteringTime, setFilteringTime] = useState(0);
   const [searchVal, setSearchVal] = useState('');
   const [codeDatas, setCodeDatas] = useState();
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   // 클릭한 상품 정보를 저장하는 상태
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -20,8 +21,16 @@ const BackFilter = () => {
 
   // 모달 열기/닫기
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    setOpen(true);
+    setSelectedProduct(null);
+
+  }
+  
+  const handleClose = () => {
+    setSelectedLiData(null);
+    setOpen(false);
+  }
 
   const getDatas = () => {
     axios.get(springUrl + "/shop/data")
@@ -75,9 +84,7 @@ const BackFilter = () => {
 
   // 클릭한 상품 정보를 저장하는 함수
   const handleLiClick = (selectedData) => {
-    // alert로 데이터 보여주기 (data-num도 포함)
-    //alert(`상품번호: ${selectedData.num}\n상품명: ${selectedData.name}\n품목: ${selectedData.filter_name}\n가격: ${selectedData.price}`);
-    // 선택한 상품 정보를 저장
+    console.log("선택한 상품 정보를 저장",selectedData);
     setSelectedProduct(selectedData);
     // 클릭한 li의 데이터 저장
     setSelectedLiData(selectedData);
@@ -87,16 +94,32 @@ const BackFilter = () => {
     setDatas((prevDatas) => [...prevDatas, newProduct]);
   };
 
-  // BasicModal에서 상품 수정 시 호출되는 함수
   const handleEditProduct = (editedProduct) => {
-    // 상품 수정 처리
-    // editedProduct에는 모달에서 수정한 내용이 담겨 있을 것입니다.
-    // 여기에서 실제로 서버에 수정 요청을 보낼 수 있습니다.
-    console.log("상품 수정 데이터:", editedProduct);
-
-    // 모달 닫기
     setOpen(false);
+    setSelectedLiData(null);
+    getDatas();
   };
+
+  const productDelete = () =>{
+    if (!isConfirmed) { 
+      const confirmed = window.confirm('정말 삭제하시겠습니까?');
+      setIsConfirmed(confirmed); 
+      if (confirmed && selectedLiData  &&selectedLiData.num  !== undefined) {
+        const numToDelete = selectedLiData.num;
+        axios.delete(`${springUrl}/shop/delete?num=${numToDelete}`)
+        .then(response => {
+          alert("삭제 완료하였습니다");
+          getDatas();
+        })
+        .catch(error => {
+          console.error('에러 발생:', error);
+        });
+      }else {
+        alert("삭제 취소되었습니다.");
+        setSelectedLiData(null);
+      }
+    } 
+  }
 
   useEffect(() => {
     getDatas();
@@ -109,8 +132,8 @@ const BackFilter = () => {
       <div style={{ height: '10%' }}>
         {codeDatas && codeDatas.map((data, idx) => (
           <div key={idx}>
-            <input type="checkbox" id={data.filter_cat} name="type" value={data.filter_name} onChange={(e) => makeFilter(e.target.checked, data.filter_cat)} />
-            <label htmlFor={data.filter_cat}>{data.filter_name}</label>
+            <input type="checkbox" id={data.filterCat} name="type" value={data.filterName} onChange={(e) => makeFilter(e.target.checked, data.filterCat)} />
+            <label htmlFor={data.filterCat}>{data.filterName}</label>
           </div>
         ))}
         <br />
@@ -120,8 +143,14 @@ const BackFilter = () => {
 
       <div className="data" style={{ border: "1px solid black" }}>
         <div style={{ display: 'flex', flexDirection: 'row', padding: '5px 5px 0 0', justifyContent: 'flex-end' }}>
-          <button onClick={handleOpen} style={{ marginRight: '5px' }}>상품등록</button>
-          <button onClick={() => setOpen(true)}>상품수정</button>
+        {!selectedLiData && <button onClick={handleOpen} style={{ marginRight: '5px' }}>상품등록</button>}
+          {selectedLiData ? (
+           <>
+            <button onClick={() => setOpen(true)} style={{ marginRight: '5px' }}>상품수정</button>
+            <button onClick={productDelete} style={{ marginRight: '5px' }}>상품삭제</button>
+            <button onClick={() => setSelectedLiData(null)}>선택 해제</button>
+          </>
+           ) : null}
         </div>
 
         <BasicModal
@@ -139,7 +168,7 @@ const BackFilter = () => {
             onClick={() => handleLiClick(data)}
             style={{ backgroundColor: selectedLiData && selectedLiData.num === data.num ? 'yellow' : 'transparent' }}
           >
-            <li data-num={data.num}>{data.name}( 품목 : {data.filter_name} )<br />가격 : {data.price} 색상 : {data.color}</li>
+            <li data-num={data.num}>{data.name}( 품목 : {data.filterName} )<br />가격 : {data.price} 색상 : {data.color}</li>
           </ul>
         ))}
       </div>
